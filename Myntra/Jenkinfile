@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE}:${VERSION} myntra"
+                sh "docker build -t ${IMAGE}:${VERSION} Myntra"
                 sh "docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest"
             }
         }
