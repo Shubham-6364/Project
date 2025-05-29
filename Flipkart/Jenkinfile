@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE}:${VERSION} flipkart"
+                sh "docker build -t ${IMAGE}:${VERSION} Flipkart"
                 sh "docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest"
             }
         }
