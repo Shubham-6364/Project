@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "codersdiary/amazon"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def version = new Date().format("yyyyMMddHHmmss")
+                    sh "docker build -t ${IMAGE_NAME}:${version} myntra"
+                    sh "docker tag ${IMAGE_NAME}:${version} ${IMAGE_NAME}:latest"
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    def version = new Date().format("yyyyMMddHHmmss")
+                    sh "docker push ${IMAGE_NAME}:${version}"
+                    sh "docker push ${IMAGE_NAME}:latest"
+                }
+            }
+        }
+
+        stage('Update K8s Deployment') {
+            steps {
+                script {
+                    def version = new Date().format("yyyyMMddHHmmss")
+                    sh "kubectl set image deployment/myntra-deployment myntra=${IMAGE_NAME}:${version} --record"
+                }
+            }
+        }
+    }
+}
