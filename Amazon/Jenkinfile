@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "yourdockerhubusername/amazon"
+        IMAGE = "codersdiary/amazon"
         VERSION = "${new Date().format('yyyyMMddHHmmss')}"
         CONTAINER_NAME = "amazon-container"
     }
