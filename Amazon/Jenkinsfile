@@ -5,10 +5,22 @@ pipeline {
         IMAGE = "codersdiary/amazon"
         VERSION = "${new Date().format('yyyyMMddHHmmss')}"
         CONTAINER_NAME = "amazon-container"
+        FOLDER = "Amazon"
     }
 
     stages {
-        
+        stage('Check Changes') {
+            steps {
+                script {
+                    def changed = sh(script: "git diff --name-only HEAD HEAD~1", returnStdout: true).trim()
+                    if (!changed.split('\n').any { it.startsWith(FOLDER + "/") }) {
+                        echo "No changes in ${FOLDER}/ folder. Skipping build."
+                        currentBuild.result = 'SUCCESS'
+                        exit 0
+                    }
+                }
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${IMAGE}:${VERSION} Amazon"
